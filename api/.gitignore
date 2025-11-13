@@ -1,0 +1,8 @@
+/node_modules
+.env
+app.log
+notes
+/typesense-data
+dist/
+/test code
+manifest-alpha-432007-d8-6175882008d8.json
