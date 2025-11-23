@@ -6,13 +6,21 @@ type Props = {
   onClick: () => void;
   variant?: "primary" | "secondary";
   children?: React.ReactNode;
+  isLoading?: boolean;
 };
 
-const Button = ({ label, onClick, children, variant = "primary" }: Props) => {
+const Button = ({
+  label,
+  onClick,
+  children,
+  variant = "primary",
+  isLoading = false,
+  ...restProps
+}: Props) => {
   return (
     <div>
-      <StyledButton variant={variant} label={label} onClick={onClick}>
-        {children}
+      <StyledButton variant={variant} onClick={onClick} {...restProps}>
+        {isLoading ? "Loading..." : children}
       </StyledButton>
     </div>
   );
