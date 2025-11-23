@@ -1,6 +1,8 @@
 "use client";
 
 import api from "@/app/config/config";
+import Button from "@/designComponents/Button/Button";
+import Input from "@/designComponents/Input/Input";
 // import axios from "axios";
 import React, { useState } from "react";
 
@@ -21,27 +23,38 @@ const Signup = () => {
     }
   };
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        backgroundColor: "#f5f5f5",
+        maxWidth: "400px",
+      }}
+    >
       <h1>Signup</h1>
-      <input
-        type="text"
+      <Input
+        label="Name"
         placeholder="name"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
-      <input
-        type="email"
+      <Input
+        label="Email"
         placeholder="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <input
-        type="password"
+      <Input
+        label="Password"
         placeholder="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={handleSubmit}>Signup</button>
+      <Button label="Signup" onClick={handleSubmit} variant="primary">
+        SignUp
+      </Button>
     </div>
   );
 };

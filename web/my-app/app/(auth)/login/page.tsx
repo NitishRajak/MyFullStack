@@ -1,6 +1,7 @@
 "use client";
 
 import api from "@/app/config/config";
+import Input from "@/designComponents/Input/Input";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -23,14 +24,14 @@ const Login = () => {
   return (
     <div>
       <h1>Login</h1>
-      <input
-        type="text"
+      <Input
+        label="Email"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <input
-        type="password"
+      <Input
+        label="Password"
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
