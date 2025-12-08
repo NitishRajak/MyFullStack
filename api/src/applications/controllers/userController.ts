@@ -44,3 +44,24 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
+
+export const follow = async (req: Request, res: Response) => {
+  try {
+    const userToFollow = await userModel.findById(req.params.id);
+    const currentUser = await userModel.findById(req.body.userId);
+    if (!userToFollow || !currentUser)
+      return res.status(404).json({ message: "User not found" });
+    if (currentUser.following.includes(userToFollow._id)) {
+      return res.status(400).json({ message: "Already following" });
+    }
+
+    currentUser.following.push(userToFollow._id);
+    userToFollow.followers.push(currentUser._id);
+
+    await currentUser.save();
+    await userToFollow.save();
+    res.json({ message: "Followed successfully" });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};

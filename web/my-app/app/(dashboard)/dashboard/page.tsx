@@ -1,102 +1,216 @@
-import Image from "next/image";
-import React from "react";
-import { FaRegComment } from "react-icons/fa6";
-import { FcLike } from "react-icons/fc";
-import { RxAvatar } from "react-icons/rx";
+"use client";
 
-const userData = [
-  {
-    id: 1,
-    name: "John Doe",
-    icon: <RxAvatar style={{ fontSize: "100px" }} />,
-    image:
-      "https://media.istockphoto.com/id/814423752/photo/eye-of-model-with-colorful-art-make-up-close-up.jpg?s=612x612&w=0&k=20&c=l15OdMWjgCKycMMShP8UK94ELVlEGvt7GmB_esHWPYE=",
-  },
-  {
-    id: 2,
-    name: "John Doe",
-    icon: <RxAvatar style={{ fontSize: "100px" }} />,
-    image:
-      "https://media.istockphoto.com/id/814423752/photo/eye-of-model-with-colorful-art-make-up-close-up.jpg?s=612x612&w=0&k=20&c=l15OdMWjgCKycMMShP8UK94ELVlEGvt7GmB_esHWPYE=",
-  },
-  {
-    id: 3,
-    name: "John Doe",
-    icon: <RxAvatar style={{ fontSize: "100px" }} />,
-    image:
-      "https://media.istockphoto.com/id/814423752/photo/eye-of-model-with-colorful-art-make-up-close-up.jpg?s=612x612&w=0&k=20&c=l15OdMWjgCKycMMShP8UK94ELVlEGvt7GmB_esHWPYE=",
-  },
-  { id: 4, name: "John Doe", icon: <RxAvatar style={{ fontSize: "100px" }} /> },
-  { id: 5, name: "John Doe", icon: <RxAvatar style={{ fontSize: "100px" }} /> },
-];
+import api from "@/app/config/config";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
+import { FaRegComment, FaRegHeart, FaHeart } from "react-icons/fa6";
+import { FiSend, FiBookmark } from "react-icons/fi";
+import { BsThreeDots } from "react-icons/bs";
+
+interface Post {
+  _id: string;
+  description: string;
+  imageUrl: string;
+  userId: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+}
 
 const Dashboard = () => {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await api.get("/posts");
+        setPosts(response.data.posts);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  const toggleLike = (postId: string) => {
+    setLikedPosts((prev) => {
+      const newLikes = new Set(prev);
+      if (newLikes.has(postId)) {
+        newLikes.delete(postId);
+      } else {
+        newLikes.add(postId);
+      }
+      return newLikes;
+    });
+  };
+
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: "50px",
+        paddingTop: "20px",
+        // width: "100%",
+        // maxWidth: "1200px",
+        width: "700px",
+        fontFamily:
+          "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          gap: "30px",
-        }}
-      >
-        {userData?.map((user) => {
-          return <div key={user?.id}>{user?.icon}</div>;
-        })}
-      </div>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
-        {userData?.map((user) => {
-          return (
-            <div key={user?.id}>
+      {posts?.map((post) => (
+        <div
+          key={post._id}
+          style={{
+            marginBottom: "20px",
+            border: "1px solid #dbdbdb",
+            borderRadius: "8px",
+            backgroundColor: "#fff",
+          }}
+        >
+          {/* Header */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "14px 16px",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
               <div
                 style={{
+                  width: "32px",
+                  height: "32px",
+                  borderRadius: "50%",
+                  background:
+                    "linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)",
+                  padding: "2px",
                   display: "flex",
-                  marginBottom: "10px",
-                  gap: "10px",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <Image
-                  src={user?.image || ""}
-                  alt="user-image"
-                  width={50}
-                  height={50}
-                  objectFit="contain"
+                <div
                   style={{
-                    borderRadius: "40px",
+                    width: "28px",
+                    height: "28px",
+                    borderRadius: "50%",
+                    backgroundColor: "#fff",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    color: "#262626",
+                  }}
+                >
+                  {post.userId.name.charAt(0).toUpperCase()}
+                </div>
+              </div>
+              <span
+                style={{
+                  fontWeight: "600",
+                  fontSize: "14px",
+                  color: "#262626",
+                }}
+              >
+                {post.userId.name}
+              </span>
+            </div>
+            <BsThreeDots style={{ fontSize: "20px", cursor: "pointer" }} />
+          </div>
+
+          {/* Image */}
+          <div
+            style={{ position: "relative", width: "100%", aspectRatio: "1/1" }}
+          >
+            <Image
+              src={post.imageUrl}
+              alt="post"
+              fill
+              style={{ objectFit: "contain" }}
+            />
+          </div>
+
+          {/* Action Buttons */}
+          <div style={{ padding: "12px 16px" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "8px",
+              }}
+            >
+              <div
+                style={{ display: "flex", gap: "16px", alignItems: "center" }}
+              >
+                <button
+                  onClick={() => toggleLike(post._id)}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: 0,
+                  }}
+                >
+                  {likedPosts.has(post._id) ? (
+                    <FaHeart style={{ fontSize: "24px", color: "#ed4956" }} />
+                  ) : (
+                    <FaRegHeart
+                      style={{ fontSize: "24px", color: "#262626" }}
+                    />
+                  )}
+                </button>
+                <FaRegComment
+                  style={{
+                    fontSize: "24px",
+                    cursor: "pointer",
+                    color: "#262626",
                   }}
                 />
-
-                <h3>{user?.name}</h3>
+                <FiSend
+                  style={{
+                    fontSize: "24px",
+                    cursor: "pointer",
+                    color: "#262626",
+                  }}
+                />
               </div>
-              <Image
-                src={user?.image || ""}
-                alt="user-image"
-                width={500}
-                height={500}
-              />
-              <div
+              <FiBookmark
                 style={{
-                  display: "flex",
-                  gap: "10px",
-                  alignItems: "center",
-                  marginTop: "10px",
+                  fontSize: "24px",
+                  cursor: "pointer",
+                  color: "#262626",
                 }}
-              >
-                <FcLike fontSize={30} />
-                <FaRegComment fontSize={30} />
-              </div>
-              <h2 style={{ marginTop: "5px" }}>8 likes</h2>
+              />
             </div>
-          );
-        })}
-      </div>
+
+            {/* Likes Count */}
+            <div
+              style={{
+                fontWeight: "600",
+                fontSize: "14px",
+                marginBottom: "8px",
+                color: "#262626",
+              }}
+            >
+              {likedPosts.has(post._id) ? "9 likes" : "8 likes"}
+            </div>
+
+            {/* Description */}
+            {post.description && (
+              <div style={{ fontSize: "14px", color: "#262626" }}>
+                <span style={{ fontWeight: "600", marginRight: "6px" }}>
+                  {post.userId.name}
+                </span>
+                {post.description}
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
     </div>
   );
 };

@@ -3,6 +3,7 @@ import React from "react";
 import { IoMdHome } from "react-icons/io";
 import { MdOutlineExplore } from "react-icons/md";
 import { FaRegMessage } from "react-icons/fa6";
+import { RxAvatar } from "react-icons/rx";
 
 type SidebarItem = {
   id: number;
@@ -18,7 +19,7 @@ export const sidebarData: SidebarItem[] = [
     icon: <IoSearchOutline style={{ fontSize: "30px" }} />,
   },
   {
-    id: 3,
+    id: 6,
     link: "/explore",
     icon: <MdOutlineExplore style={{ fontSize: "30px" }} />,
   },
@@ -28,8 +29,13 @@ export const sidebarData: SidebarItem[] = [
     icon: <FaRegMessage style={{ fontSize: "30px" }} />,
   },
   {
-    id: 3,
+    id: 4,
     link: "/settings",
     icon: <IoSettingsSharp style={{ fontSize: "30px" }} />,
+  },
+  {
+    id: 5,
+    link: "/profile",
+    icon: <RxAvatar style={{ fontSize: "30px" }} />,
   },
 ];

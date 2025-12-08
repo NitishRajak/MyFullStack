@@ -2,7 +2,6 @@ import React from "react";
 import { StyledButton } from "./style";
 
 type Props = {
-  label: string;
   onClick: () => void;
   variant?: "primary" | "secondary";
   children?: React.ReactNode;
@@ -10,7 +9,6 @@ type Props = {
 };
 
 const Button = ({
-  label,
   onClick,
   children,
   variant = "primary",

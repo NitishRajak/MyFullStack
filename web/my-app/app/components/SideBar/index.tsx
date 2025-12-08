@@ -7,7 +7,7 @@ const Sidebar = () => {
     <div>
       {sidebarData?.map((item) => {
         return (
-          <div key={item.link} style={{ marginBottom: "15px" }}>
+          <div key={item.id} style={{ marginBottom: "25px" }}>
             <Link href={item.link}> {item.icon}</Link>
           </div>
         );
